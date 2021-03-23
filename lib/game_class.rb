@@ -1,9 +1,10 @@
 class Game
   def initialize
-    @words = ["alpha", "beta", "gamma"]
+    @words = ["TEST"]
     @word = @words.sample
     @lives = @word.length + 2
     @guessed_letters = []
+    @word_arr = (@word.split("")).uniq
   end
 
   def run
@@ -13,6 +14,8 @@ class Game
       display_word
       guess_word
       check_guess
+      puts @guessed_letters
+      puts @word
       check_win
       check_lives
     end
@@ -51,12 +54,13 @@ class Game
         @word = @words.sample
         @lives = @word.length + 2
         @guessed_letters = []
+        @word_arr = (@word.split("")).uniq
       end
     end
   end
 
   def check_guess
-    unless @word.include?(@guess)
+    unless @word.upcase.include?(@guess)
       @lives -= 1
     end
   end
@@ -66,7 +70,7 @@ class Game
   end
 
   def check_win
-    if (@guessed_letters.include?(@word))
+    if (@word_arr - (@guessed_letters & @word_arr)).empty?
       puts "You win!"
       exit
     end
