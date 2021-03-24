@@ -1,22 +1,13 @@
 require "io/console"
+require "faker"
 
 class Game
-  def initialize
-    @words = ["GAME", "INDEX", "RUBY", "PROGRAMMER", "CODE", "BUG"]
-    @word = @words.sample
-    @lives = @word.length + 2
-    @guessed_letters = []
-    @word_arr = (@word.split("")).uniq
-  end
-
   def run
     display_clear
-    display_break
     welcome_message
-    display_break
-    press_any_key
-    display_clear
+    generate_word
     loop do
+      # debug_words
       display_word
       check_win
       display_lives
@@ -28,12 +19,70 @@ class Game
     end
   end
 
-  def display_word
-    @word.chars.each do |char|
-      if @guessed_letters.include?(char.upcase)
-        print "#{char.upcase} "
+  def generate_word
+    puts "Welcome to hangman!\n\n"
+    puts "Please choose a word category..."
+    puts "1. League of Legends"
+    puts "2. Half Life"
+    puts "3. Band Names"
+    puts "4. Basketball Players"
+    puts "5. Movie Titles"
+    puts "\n"
+    loop do
+      @category_selection = gets.chomp.to_i
+      if @category_selection == 1
+        @word = (Faker::Games::LeagueOfLegends.champion.upcase)
+        @category = "League of Legends"
+        break
+      elsif @category_selection == 2
+        @word = (Faker::Games::HalfLife.character.upcase)
+        @category = "Half Life"
+        break
+      elsif @category_selection == 3
+        @word = (Faker::Music.band.upcase)
+        @category = "Band Names"
+        break
+      elsif @category_selection == 4
+        @word = (Faker::Sports::Basketball.player.upcase)
+        @category = "Basketball Players"
+        break
+      elsif @category_selection == 5
+        @word = (Faker::Movie.title.upcase)
+        @category = "Movie Titles"
+        break
+      elsif @category_selection == 0
+        @word = "MONKE"
+        500.times do
+          puts "MONKE MODE ACTIVATED"
+          sleep(0.001)
+        end
+        break
       else
-        print "_ "
+        puts "Invalid selection, please choose again."
+      end
+    end
+    @lives = @word.length + 3
+    @guessed_letters = []
+    word_arr_whitespace = (@word.split("")).uniq
+    @word_arr = word_arr_whitespace.select { |char| char != " " }
+    display_clear
+    puts "I'm going to give you #{@lives} chances\nto guess letters in the #{@category}\nthemed word I'm thinking of.\n\nGood luck!"
+    press_any_key
+    display_clear
+  end
+
+  def display_word
+    puts "Your selected category is #{@category}\n\n"
+    puts "The word is: \n"
+    @word.chars.each do |char|
+      if char == " "
+        print "  "
+      else
+        if @guessed_letters.include?(char.upcase)
+          print "#{char.upcase} "
+        else
+          print "_ "
+        end
       end
     end
     puts "\n"
@@ -65,19 +114,14 @@ class Game
   end
 
   def check_lives
-    if @lives <= 0
+    if @lives == 0
       display_clear
-      puts "Sorry, you lose...\n\nPlay again? Y/N"
+      puts "Sorry, you lose...\n\nThe word was #{@word}.\n\nPlay again? Y/N"
       continue = gets.chomp.upcase
       if continue == "N"
         exit
       else
-        @word = @words.sample
-        @lives = @word.length + 2
-        @guessed_letters = []
-        @word_arr = (@word.split("")).uniq
-        display_clear
-        welcome_message
+        run
       end
     end
   end
@@ -98,13 +142,17 @@ class Game
 
   def check_win
     if (@word_arr - (@guessed_letters & @word_arr)).empty?
-      puts "You win!"
-      exit
+      puts "\nYou win!\nWould you like to play again? Y/N"
+      continue = gets.chomp.upcase
+      if continue == "N"
+        exit
+      else
+        run
+      end
     end
   end
 
   def welcome_message
-    puts "Welcome to hangman!\n\nI'm going to give you #{@lives} chances\nto guess letters in the word I'm\nthinking of.\n\nGood luck!"
   end
 
   def display_clear
@@ -114,5 +162,12 @@ class Game
   def press_any_key
     print "\nPress any key to continue..."
     STDIN.getch
+  end
+
+  def debug_words
+    puts "word\n #{@word}"
+    puts "word_arr\n #{@word_arr}"
+    puts "guess\n #{@guess}"
+    puts "guessed_letters\n #{@guessed_letters}"
   end
 end
