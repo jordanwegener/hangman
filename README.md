@@ -77,4 +77,6 @@ def check_win
 
 ## To do
 
-Currently the entire game is contained within a single class - this isn't ideal. It would be best to separate the menu and continue/exit methods into a separate class.
+* Currently the entire game is contained within a single class - this isn't ideal. It would be best to separate the menu and continue/exit methods into a separate class.
+
+* I have managed to exclude spaces from the characters the user needs to guess to win, but some words still include punctuation which I would prefer not to happen.
