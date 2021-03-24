@@ -35,7 +35,8 @@ Press any key to continue...
 
 Guesses can be made by entering any character and then pressing enter. If the guess is not a previously guessed character and is not in the word, a life is lost. If it is in the word, that character is revealed wherever it appears in the word.
 
-```Your selected category is League of Legends
+```
+Your selected category is League of Legends
 
 The word is: 
 _ _ _ _ _ 
@@ -43,7 +44,8 @@ _ _ _ _ _
 You have 8 lives left
 
 
-Guess a letter...```
+Guess a letter...
+```
 
 If the player wins or loses, the user is prompted to either elect to play again or quit.
 
